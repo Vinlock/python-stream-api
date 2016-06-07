@@ -7,7 +7,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 
-config = {
+db_config = {
     'mysql': {
         'driver': config['database']['driver'],
         'host': config['database']['host'],
@@ -32,5 +32,5 @@ stores = {
 
 cache = Cache(stores)
 
-db = DatabaseManager(config, cache=cache)
+db = DatabaseManager(db_config, cache=cache)
 Model.set_connection_resolver(db)
