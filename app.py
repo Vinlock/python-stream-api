@@ -120,8 +120,11 @@ while(True):
     starter.set_all("instagram", None)
     starter.set_all("website", None)
     starter.set_all("member_id", None)
-    starter.prepend(supported)
-    starter.cut()
+    if supported.num_streams() > 0:
+        starter.prepend(supported)
+        starter.cut()
+    else:
+        starter.cut(9)
     if starter.output_to_json():
         now = time.strftime("%c")
         print(">>> Generated JSON ---", "Current time %s"  % time.strftime("%c"))
