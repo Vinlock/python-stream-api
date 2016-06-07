@@ -1,5 +1,6 @@
 import configparser
-from orator import DatabaseManager, Model
+from orator import Model
+from orator_cache import DatabaseManager, Cache
 
 config = configparser.ConfigParser()
 
@@ -17,5 +18,19 @@ config = {
     }
 }
 
-db = DatabaseManager(config)
+stores = {
+    'stores': {
+        'redis': {
+            'driver': 'redis',
+            'host': 'localhost',
+            'password': 'aw45gbnb3w4b4w',
+            'port': 6379,
+            'db': 0
+        }
+    }
+}
+
+cache = Cache(stores)
+
+db = DatabaseManager(config, cache=cache)
 Model.set_connection_resolver(db)
