@@ -1,10 +1,10 @@
-from orator import Model
+from orator import Model, DatabaseManager
 from orator.orm import has_one
 from Models.UserProfile import UserProfile
-
 import settings
 
-Model.set_connection_resolver(settings.db)
+db = DatabaseManager(settings.config)
+Model.set_connection_resolver(db)
 
 class User(Model):
     __table__ = "pad_users"
@@ -12,5 +12,3 @@ class User(Model):
     @has_one('user_id')
     def profile(self):
         return UserProfile
-
-    pass

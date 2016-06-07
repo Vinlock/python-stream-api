@@ -1,6 +1,6 @@
 from os.path import join, dirname
 from dotenv import load_dotenv
-from orator import DatabaseManager
+from orator import DatabaseManager, Model
 import os
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -24,4 +24,3 @@ config = {
     }
 }
 
-db = DatabaseManager(config)
