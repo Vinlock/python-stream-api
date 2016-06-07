@@ -56,3 +56,10 @@ class StreamDriver:
         """Yield successive n-sized chunks from l."""
         for i in range(0, len(l), n):
             yield l[i:i + n]
+
+    @staticmethod
+    def list_from_key(array, key):
+        new_list = []
+        for single in array:
+            new_list.append(single[key])
+        return new_list

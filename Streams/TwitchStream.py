@@ -46,7 +46,7 @@ class TwitchStream(Stream):
         return self._stream_data['channel']['url']
 
     def viewers(self):
-        return self._stream_data['viewers']
+        return int(self._stream_data['viewers'])
 
     def id(self):
         return self._stream_data['channel']['_id']

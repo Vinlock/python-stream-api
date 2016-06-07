@@ -56,7 +56,7 @@ class HitboxStream(Stream):
         return self._stream_data['media_id']
 
     def viewers(self):
-        return self._stream_data['media_views']
+        return int(self._stream_data['media_views'])
 
     def large_preview(self):
         return self.STREAM_IMG + self._stream_data['media_thumbnail_large']
