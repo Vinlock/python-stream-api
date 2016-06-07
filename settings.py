@@ -22,9 +22,9 @@ stores = {
     'stores': {
         'redis': {
             'driver': 'redis',
-            'host': 'localhost',
-            'password': 'aw45gbnb3w4b4w',
-            'port': 6379,
+            'host': config['redis']['host'],
+            'password': config['redis']['password'],
+            'port': config['redis']['port'],
             'db': 0
         }
     }
