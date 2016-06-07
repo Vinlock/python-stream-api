@@ -1,4 +1,3 @@
-import settings # To Activate Database Connection
 from StreamDriver import StreamDriver
 from Services.Service import *
 from Models.Models import *
@@ -51,6 +50,7 @@ StreamDriver.set_limit(driver_limit)
 print("%s"  % time.strftime("%c"), ">>> Driver Limit Set to 10...")
 
 while(True):
+    import settings
     print("%s"  % time.strftime("%c"), ">>> Reconstructing JSON...")
 
     roles = Role.where('name', '=', 'supported').first()
@@ -129,6 +129,7 @@ while(True):
         now = time.strftime("%c")
         print(">>> Generated JSON ---", "Current time %s"  % time.strftime("%c"))
 
+    settings.db.disconnect()
     print("Sleeping for", seconds_to_sleep, "seconds... Night yo.")
     for i in range(seconds_to_sleep):
         time.sleep(1)
