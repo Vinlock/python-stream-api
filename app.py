@@ -127,4 +127,7 @@ while(True):
         print(">>> Generated JSON ---", "Current time %s"  % time.strftime("%c"))
 
     print("Sleeping for", seconds_to_sleep, "seconds... Night yo.")
-    time.sleep(seconds_to_sleep)
+    for i in range(seconds_to_sleep):
+        sleep(1)
+        print(seconds_to_sleep-i, end='\r')
+    # time.sleep(seconds_to_sleep)
