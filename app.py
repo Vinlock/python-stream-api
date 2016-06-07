@@ -129,5 +129,5 @@ while(True):
     print("Sleeping for", seconds_to_sleep, "seconds... Night yo.")
     for i in range(seconds_to_sleep):
         time.sleep(1)
-        print(seconds_to_sleep-i, next(spinner), end='\r')
+        print("", seconds_to_sleep-i, next(spinner), end='\r')
     # time.sleep(seconds_to_sleep)
