@@ -1,26 +1,21 @@
-from os.path import join, dirname
-from dotenv import load_dotenv
+import configparser
 from orator import DatabaseManager, Model
-import os
 
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
+config = configparser.ConfigParser()
 
-DRIVER = os.environ.get("DRIVER")
-HOST = os.environ.get("HOST")
-DATABASE = os.environ.get("DATABASE")
-USER = os.environ.get("USER")
-PASSWORD = os.environ.get("PASSWORD")
-PREFIX = os.environ.get("PREFIX")
+config.read('config.ini')
+
 
 config = {
     'mysql': {
-        'driver': DRIVER,
-        'host': HOST,
-        'database': DATABASE,
-        'user': USER,
-        'password': PASSWORD,
-        'prefix': PREFIX
+        'driver': config['database']['driver'],
+        'host': config['database']['host'],
+        'database': config['database']['database'],
+        'user': config['database']['user'],
+        'password': config['database']['password'],
+        'prefix': config['database']['prefix']
     }
 }
 
+db = DatabaseManager(config)
+Model.set_connection_resolver(db)

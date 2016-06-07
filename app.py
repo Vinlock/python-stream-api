@@ -3,6 +3,7 @@ from Models.Game import Game
 from Models.UserProfile import UserProfile
 from Models.StreamService import StreamService
 from Models.User import User
+import settings # To Activate Database Connection
 
 # Set the limit for the game lists to 10
 StreamDriver.set_limit(10)

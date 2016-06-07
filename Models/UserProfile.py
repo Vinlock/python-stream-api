@@ -1,8 +1,4 @@
-from orator import Model, DatabaseManager
-import settings
-
-db = DatabaseManager(settings.config)
-Model.set_connection_resolver(db)
+from orator import Model
 
 
 class UserProfile(Model):
