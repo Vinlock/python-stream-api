@@ -1,0 +1,58 @@
+from Streams.TwitchStream import TwitchStream
+from Streams.HitboxStream import HitboxStream
+import abc, requests, urllib.parse
+
+class StreamDriver:
+    __metaclass__ = abc.ABCMeta
+
+    NUM_PER_MULTI = 100
+
+    _limit = 0
+
+    providers = {
+        "twitch": TwitchStream,
+        "hitbox": HitboxStream
+    }
+
+    @staticmethod
+    def get_streams(usernames, service):
+        streams = []
+
+        chunks = StreamDriver.chunks(usernames, StreamDriver.NUM_PER_MULTI)
+
+        for chunk in chunks:
+            list = ",".join(chunk)
+            data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
+            for stream in data[StreamDriver.providers[service].STREAM_KEY]:
+                stream_object = StreamDriver.providers[service](stream)
+                streams.append(stream_object)
+        return streams
+
+    @staticmethod
+    def by_game(game, service):
+        if StreamDriver._limit is 0:
+            limit = StreamDriver.NUM_PER_MULTI
+        else:
+            limit = StreamDriver._limit
+
+        streams = []
+
+        game = urllib.parse.quote(game)
+        stream_key = StreamDriver.providers[service].STREAM_KEY
+
+        data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
+        if stream_key in data:
+            for stream in data[stream_key]:
+                stream_object = StreamDriver.providers[service](stream)
+                streams.append(stream_object)
+        return streams
+
+    @staticmethod
+    def set_limit(int):
+        StreamDriver._limit = int
+
+    @staticmethod
+    def chunks(l, n):
+        """Yield successive n-sized chunks from l."""
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
