@@ -59,7 +59,7 @@ while(True):
     supported.sort()
 
     starter = Service([])
-    games = Game.all(["name"]).pluck("name").all()
+    games = Game.where('status', '=', 1).get().pluck("name").all()
     for game in games:
         starter.merge(TwitchService.game(game))
         starter.merge(HitboxService.game(game))
