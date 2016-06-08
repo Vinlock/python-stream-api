@@ -127,7 +127,7 @@ while(True):
         starter.cut(9)
     serv = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f13-streams/streams.json"
     local = "streams.json"
-    if starter.output_to_json(serv):
+    if starter.output_to_json(local):
         now = time.strftime("%c")
         print(">>> Generated JSON ---", "Current time %s"  % time.strftime("%c"))
 

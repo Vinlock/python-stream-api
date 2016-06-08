@@ -46,7 +46,10 @@ class Stream:
 
     @staticmethod
     def filter_bio(bio):
-        bio = re.sub("/\r|\n/", "", html.unescape(cgi.escape(bio, True)))
+        if bio is "":
+            bio = "User has no bio!"
+        else:
+            bio = re.sub("/\r|\n/", '', html.escape(cgi.escape(bio, True)))
         return bio
 
     def preview(self, size = "large"):
