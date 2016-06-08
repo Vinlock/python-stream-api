@@ -61,7 +61,7 @@ class TwitchStream(Stream):
     def bio(self):
         request = requests.get(self.USERS_API+self.username())
         response = request.json()
-        dictionary = json.dumps(response)
+        dictionary = json.dumps(response['bio'])
         return Stream.filter_bio(dictionary)
 
     def created_at(self):
