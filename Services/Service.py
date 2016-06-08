@@ -1,6 +1,6 @@
 from Streams.Stream import Stream
 from StreamDriver import StreamDriver
-import json
+import json, io
 
 
 class Service:
@@ -65,8 +65,8 @@ class Service:
         self._streams = sorted(self._streams, key=lambda k: k.viewers(), reverse=True)
 
     def output_to_json(self, file="streams.json"):
-        with open(file, 'w') as streams_file:
-            json.dump(self.get_dict(), streams_file)
+        with io.open(file, 'w', encoding='utf8') as streams_file:
+            json.dump(self.get_dict(), streams_file, ensure_ascii=False)
         return True
 
 

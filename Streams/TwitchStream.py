@@ -59,10 +59,11 @@ class TwitchStream(Stream):
             return avatar
 
     def bio(self):
-        request = requests.get(self.USERS_API+self.username())
-        response = request.json()
-        dictionary = json.dumps(response['bio'])
-        return Stream.filter_bio(dictionary)
+        response = requests.get(self.USERS_API+self.username()).json()
+        dictionary = json.dumps(response['bio'], ensure_ascii=False)
+        bio = Stream.filter_bio(dictionary)
+        # print(bio)
+        return bio
 
     def created_at(self):
         return self._stream_data['created_at']
