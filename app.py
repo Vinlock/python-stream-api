@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 # ENVIRONMENT DESTINATION - production || local || same
 if args.env == "local":
-    dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f13-streams/streams.json"
+    dest = "/Applications/MAMP/htdocs/pad-laravel/public/234c12f14-streams"
 elif args.env == "same":
     dest = "streams.json"
 else:
