@@ -18,7 +18,7 @@ if args.env == "local":
 elif args.env == "same":
     dest = "streams.json"
 else:
-    dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f13-streams/streams.json"
+    dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f14-streams/streams.json"
 # END ENVIRONEMNT DESTINATION
 
 # SPINNER
