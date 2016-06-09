@@ -2,52 +2,66 @@ from StreamDriver import StreamDriver
 from Services.Service import *
 from Models.Models import *
 import time, sys, itertools
+import argparse
 
+# ARG PARSER
+parser = argparse.ArgumentParser(description="Parser")
+parser.add_argument('-s', '--sleep', default=180)
+parser.add_argument('-l', '--limit', default=10)
+parser.add_argument('-e', '--env', default="production")
+args = parser.parse_args()
+# END ARG PARSER
 
+# ENVIRONMENT DESTINATION - production || local || same
+if args.env == "local":
+    dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f13-streams/streams.json"
+elif args.env == "same":
+    dest = "streams.json"
+else:
+    dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f13-streams/streams.json"
+# END ENVIRONEMNT DESTINATION
 
-
-
+# SPINNER
 spinner = itertools.cycle(['-', '/', '|', '\\'])
+# END SPINNER
 
+# INTRO
 print("%s"  % time.strftime("%c"), ">>> By: Dak Washbrook")
 print("%s"  % time.strftime("%c"), ">>> Version: v0.1 BETA")
 print("%s"  % time.strftime("%c"), ">>> Vinlock is awesome!")
 print("%s"  % time.strftime("%c"), ">>> Starting Stream JSON Creator...")
+# END INTRO
 
-args = sys.argv
-
-if (len(args) > 1):
-    try:
-        val = int(args[1])
-        seconds_to_sleep = val
-    except TypeError:
-        print("%s"  % time.strftime("%c"), ">>> Invalid Seconds Input")
-        seconds_to_sleep = 180
-else:
+# SET SLEEP
+try:
+    seconds_to_sleep = int(args.sleep)
+except TypeError:
+    print("%s" % time.strftime("%c"), ">>> Invalid Seconds Input")
     seconds_to_sleep = 180
 
 print("%s"  % time.strftime("%c"), ">>> Will Sleep for", seconds_to_sleep)
 
+# END SET SLEEP
+
+# SERVICE PROVIDERS
 service_providers = {
     "twitch": TwitchService,
     "hitbox": HitboxService
 }
-
 print("%s"  % time.strftime("%c"), ">>> Service Providers Established...")
+# END SERVICE PROVIDERS
 
-if (len(args) > 2):
-    try:
-        val = int(args[2])
-        driver_limit = val
-    except TypeError:
-        print("%s"  % time.strftime("%c"), ">>> Invalid Limit Amount")
-        driver_limit = 10
-else:
+# DRIVER LIMIT
+try:
+    driver_limit = int(args.limit)
+except TypeError:
+    print("%s" % time.strftime("%c"), ">>> Invalid Limit Amount")
     driver_limit = 10
 
 # Set the limit for the game lists to 10
 StreamDriver.set_limit(driver_limit)
 print("%s"  % time.strftime("%c"), ">>> Driver Limit Set to 10...")
+# END DRIVER LIMIT
 
 while(True):
     import settings
@@ -125,9 +139,8 @@ while(True):
         starter.cut()
     else:
         starter.cut(9)
-    serv = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f13-streams/streams.json"
-    local = "streams.json"
-    if starter.output_to_json(serv):
+
+    if starter.output_to_json(dest):
         now = time.strftime("%c")
         print(">>> Generated JSON ---", "Current time %s"  % time.strftime("%c"))
 
