@@ -116,14 +116,20 @@ while(True):
     supported = Service(supported_streams)
     supported.sort()
 
-    starter = Service([])
+    starter = None
 
     print("Obtaining Active Games", next(spinner), end='\r')
     games = Game.where('status', '=', 1).get().pluck("name").all()
     for game in games:
         print("Obtaining Active Games", next(spinner), end='\r')
-        starter.merge(TwitchService.game(game))
-        starter.merge(HitboxService.game(game))
+        if starter is None:
+            starter = TwitchService.game(game)
+        else:
+            starter.merge(TwitchService.game(game))
+        if starter is None:
+            starter = HitboxService.game(game)
+        else:
+            starter.merge(HitboxService.game(game))
     print("%s"  % time.strftime("%c"), ">>> Obtained Active Games.")
 
     starter.sort()
