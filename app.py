@@ -118,7 +118,7 @@ class App(object):
         status()
         for service, streams in supported_list.items():
             status()
-            all_supported = self.__providers()[service](StreamDriver.list_from_key(supported_list[service], 'username'))
+            all_supported = self.service_providers[service](StreamDriver.list_from_key(supported_list[service], 'username'))
             if all_supported.num_streams() > 0:
                 for stream_object in all_supported.get():
                     status()
