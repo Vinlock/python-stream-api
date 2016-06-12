@@ -1,6 +1,7 @@
 from Streams.TwitchStream import TwitchStream
 from Streams.HitboxStream import HitboxStream
-import abc, requests, urllib.parse
+import abc, requests, urllib.parse, time
+from app import App
 
 class StreamDriver:
     __metaclass__ = abc.ABCMeta
@@ -26,12 +27,18 @@ class StreamDriver:
                 try:
                     data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
                 except ConnectionError:
+                    StreamDriver.iferror(300)
                     continue
                 break
             for stream in data[StreamDriver.providers[service].STREAM_KEY]:
                 stream_object = StreamDriver.providers[service](stream)
                 streams.append(stream_object)
         return streams
+
+    @staticmethod
+    def iferror(sleep):
+        App.mainconsole("Request Connection Error Occurred. Sleeping for "+sleep+" seconds then trying again.")
+        time.sleep(sleep)
 
     @staticmethod
     def by_game(game, service):
@@ -48,6 +55,7 @@ class StreamDriver:
             try:
                 data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
             except ConnectionError:
+                StreamDriver.iferror(300)
                 continue
             break
         if stream_key in data:

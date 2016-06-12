@@ -61,6 +61,10 @@ class App(object):
     def __console(self, string):
         print("%s" % time.strftime("%c"), ">>> "+string)
 
+    @staticmethod
+    def mainconsole(string):
+        print("%s" % time.strftime("%c"), ">>> " + string)
+
     def __cnsltemp(self, string, spinner=True):
         if spinner:
             print(string, next(self.spinner), end='\r')
