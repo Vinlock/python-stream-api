@@ -22,7 +22,12 @@ class StreamDriver:
 
         for chunk in chunks:
             list = ",".join(chunk)
-            data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
+            while True:
+                try:
+                    data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
+                except ConnectionError:
+                    continue
+                break
             for stream in data[StreamDriver.providers[service].STREAM_KEY]:
                 stream_object = StreamDriver.providers[service](stream)
                 streams.append(stream_object)
@@ -39,8 +44,12 @@ class StreamDriver:
 
         game = urllib.parse.quote(game)
         stream_key = StreamDriver.providers[service].STREAM_KEY
-
-        data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
+        while True:
+            try:
+                data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
+            except ConnectionError:
+                continue
+            break
         if stream_key in data:
             for stream in data[stream_key]:
                 stream_object = StreamDriver.providers[service](stream)

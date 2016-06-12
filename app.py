@@ -4,155 +4,197 @@ from Models.Models import *
 import time, sys, itertools
 import argparse
 
-# ARG PARSER
-parser = argparse.ArgumentParser(description="Parser")
-parser.add_argument('-s', '--sleep', default=180)
-parser.add_argument('-l', '--limit', default=10)
-parser.add_argument('-e', '--env', default="production")
-args = parser.parse_args()
-# END ARG PARSER
 
-# ENVIRONMENT DESTINATION - production || local || same
-if args.env == "local":
-    dest = "/Applications/MAMP/htdocs/pad-laravel/public/234c12f14-streams/streams.json"
-elif args.env == "same":
-    dest = "streams.json"
-else:
-    dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f14-streams/streams.json"
-# END ENVIRONEMNT DESTINATION
+class App(object):
+    def __init__(self):
+        # STARTUP
+        self.__console("By: Dak Washbrook")
+        self.__console("Version: v0.1 BETA")
+        self.__console("Vinlock is awesome!")
+        self.__console("Starting Stream JSON Creator...")
 
-# SPINNER
-spinner = itertools.cycle(['-', '/', '|', '\\'])
-# END SPINNER
+        # SPINNER
+        self.spinner = itertools.cycle(['-', '/', '|', '\\'])
 
-# INTRO
-print("%s"  % time.strftime("%c"), ">>> By: Dak Washbrook")
-print("%s"  % time.strftime("%c"), ">>> Version: v0.1 BETA")
-print("%s"  % time.strftime("%c"), ">>> Vinlock is awesome!")
-print("%s"  % time.strftime("%c"), ">>> Starting Stream JSON Creator...")
-# END INTRO
+        # APP ARGUMENTS
+        self.args = self.__parse_args()
 
-# SET SLEEP
-try:
-    seconds_to_sleep = int(args.sleep)
-except TypeError:
-    print("%s" % time.strftime("%c"), ">>> Invalid Seconds Input")
-    seconds_to_sleep = 180
+        # APP SLEEP TIME
+        self.sleep = self.__sleep()
 
-print("%s"  % time.strftime("%c"), ">>> Will Sleep for", seconds_to_sleep)
+        # APP SERVICE PROVIDERS
+        self.service_providers = self.__providers()
 
-# END SET SLEEP
+        # APP STREAM DRIVER LIMIT
+        self.limit = self.__limit()
 
-# SERVICE PROVIDERS
-service_providers = {
-    "twitch": TwitchService,
-    "hitbox": HitboxService
-}
-print("%s"  % time.strftime("%c"), ">>> Service Providers Established...")
-# END SERVICE PROVIDERS
+        # APP ENVIRONEMNT
+        self.env = self.args.env
 
-# DRIVER LIMIT
-try:
-    driver_limit = int(args.limit)
-except TypeError:
-    print("%s" % time.strftime("%c"), ">>> Invalid Limit Amount")
-    driver_limit = 10
+    def __sleep(self):
+        try:
+            sleep = int(self.args.sleep)
+        except TypeError:
+            self.__console("Invalid Sleep Seconds.")
+            sleep = 180
+        self.__console("Will sleep for " + str(sleep) + " seconds.")
+        return sleep
 
-# Set the limit for the game lists to 10
-StreamDriver.set_limit(driver_limit)
-print("%s"  % time.strftime("%c"), ">>> Driver Limit Set to 10...")
-# END DRIVER LIMIT
+    def __limit(self):
+        try:
+            limit = int(self.args.limit)
+        except TypeError:
+            self.__console("Invalid Limit Amount.")
+            limit = 10
+        StreamDriver.set_limit(limit)
+        self.__console("Stream Driver Limit set to " + str(limit))
+        return limit
 
-while(True):
-    import settings
-    print("%s"  % time.strftime("%c"), ">>> Reconstructing JSON...")
-
-    roles = Role.where('name', '=', 'supported').first()
-    print("Obtained Supported Role...", end='\r')
-    users = roles.users().get()
-    print("Obtained Users in Supported Role...", end='\r')
-    supported_list = {'twitch': [], "hitbox": []}
-
-    print("Filling Custom Fields for Users...", next(spinner), end='\r')
-    for user in users:
-        print("Filling Custom Fields for Users...", next(spinner), end='\r')
-        service = user.primary_service()
-        username = getattr(user.profile, service)
-        stream_info = {
-            'username': username,
-            'youtube': user.profile.youtube,
-            'facebook': user.profile.facebook,
-            'twitter': user.profile.twitter,
-            'instagram': user.profile.instagram,
-            'website': user.profile.website,
-            'member_id': user.profile.user_id
+    def __providers(self):
+        providers = {
+            "twitch": TwitchService,
+            "hitbox": HitboxService
         }
-        if username and service:
-            supported_list[service].append(stream_info)
-    print("%s"  % time.strftime("%c"), ">>> Filled Custom Fields for Users.")
+        self.__console("Service Providers Established...")
+        return providers
 
-    supported_streams = []
+    def __console(self, string):
+        print("%s" % time.strftime("%c"), ">>> "+string)
 
-    print("Building Stream Objects for Supported Streams...", next(spinner), end='\r')
-    for service, streams in supported_list.items():
-        print("Building Stream Objects for Supported Streams...", next(spinner), end='\r')
-        all_supported = service_providers[service](StreamDriver.list_from_key(supported_list[service], 'username'))
-        if all_supported.num_streams() > 0:
-            for stream_object in all_supported.get():
-                print("Building Stream Objects for Supported Streams...", next(spinner), end='\r')
-                stream_object.set_custom('type', 'supported')
-                for element in streams:
-                    print("Building Stream Objects for Supported Streams...", next(spinner), end='\r')
-                    if element['username'] == stream_object.username():
-                        stream_object.set_custom('youtube', element['youtube'])
-                        stream_object.set_custom('facebook', element['facebook'])
-                        stream_object.set_custom('twitter', element['twitter'])
-                        stream_object.set_custom('instagram', element['instagram'])
-                        stream_object.set_custom('website', element['website'])
-                        stream_object.set_custom('member_id', element['member_id'])
-                supported_streams.append(stream_object)
-    print("%s"  % time.strftime("%c"), ">>> Built Stream Objects for Supported Streams.")
-
-    supported = Service(supported_streams)
-    supported.sort()
-
-    starter = None
-
-    print("Obtaining Active Games", next(spinner), end='\r')
-    games = Game.where('status', '=', 1).get().pluck("name").all()
-    for game in games:
-        print("Obtaining Active Games", next(spinner), end='\r')
-        if starter is None:
-            starter = TwitchService.game(game)
+    def __cnsltemp(self, string, spinner=True):
+        if spinner:
+            print(string, next(self.spinner), end='\r')
         else:
-            starter.merge(TwitchService.game(game))
-        if starter is None:
-            starter = HitboxService.game(game)
+            print(string, end='\r')
+
+    def __parse_args(self):
+        parser = argparse.ArgumentParser(description="Parser")
+        parser.add_argument('-s', '--sleep', default=180)
+        parser.add_argument('-l', '--limit', default=10)
+        parser.add_argument('-e', '--env', default="production")
+        return parser.parse_args()
+
+    def __output(self):
+        if self.env == "local":
+            dest = "/Applications/MAMP/htdocs/pad-laravel/public/234c12f14-streams/streams.json"
+        elif self.env == "same":
+            dest = "streams.json"
         else:
-            starter.merge(HitboxService.game(game))
-    print("%s"  % time.strftime("%c"), ">>> Obtained Active Games.")
+            dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f14-streams/streams.json"
+        return dest
 
-    starter.sort()
-    starter.set_all("type", "other")
-    starter.set_all("youtube", None)
-    starter.set_all("facebook", None)
-    starter.set_all("twitter", None)
-    starter.set_all("instagram", None)
-    starter.set_all("website", None)
-    starter.set_all("member_id", None)
-    if supported.num_streams() > 0:
-        starter.prepend(supported)
-        starter.cut()
-    else:
-        starter.cut(9)
+    def __get_supported(self):
+        roles = Role.where('name', '=', 'supported').first()
+        self.__cnsltemp("Obtained Supported Role...")
+        users = roles.users().get()
+        self.__cnsltemp("Obtained Users in Supported Role...")
+        return users
 
-    if starter.output_to_json(dest):
-        now = time.strftime("%c")
-        print(">>> Generated JSON ---", "Current time %s"  % time.strftime("%c"))
+    def __fill_custom_fields(self, users):
+        supported_list = {'twitch': [], 'hitbox': []}
+        for user in users:
+            self.__cnsltemp("Filling Custom Fields for Users...")
+            service = user.primary_service()
+            username = getattr(user.profile, service)
+            stream_info = {
+                'username': username,
+                'youtube': user.profile.youtube,
+                'facebook': user.profile.facebook,
+                'twitter': user.profile.twitter,
+                'instagram': user.profile.instagram,
+                'website': user.profile.website,
+                'member_id': user.profile.user_id
+            }
+            if username and service:
+                supported_list[service].append(stream_info)
+            self.__console("Filled Custom Fields for Users")
+            return supported_list
 
-    settings.db.disconnect()
-    print("Sleeping for", seconds_to_sleep, "seconds... Night yo.")
-    for i in range(seconds_to_sleep):
-        time.sleep(1)
-        print("", seconds_to_sleep-i, next(spinner), end='\r')
-    # time.sleep(seconds_to_sleep)
+    def __build_streams(self, users):
+        def status():
+            self.__cnsltemp("Building Stream Objects for Supported Streams...")
+        supported_streams = []
+        supported_list = self.__fill_custom_fields(users)
+        status()
+        for service, streams in supported_list.items():
+            status()
+            all_supported = self.__providers()[service](StreamDriver.list_from_key(supported_list[service], 'username'))
+            if all_supported.num_streams() > 0:
+                for stream_object in all_supported.get():
+                    status()
+                    stream_object.set_custom('type', 'supported')
+                    for element in streams:
+                        status()
+                        if element['username'] == stream_object.username():
+                            stream_object.set_custom('youtube', element['youtube'])
+                            stream_object.set_custom('facebook', element['facebook'])
+                            stream_object.set_custom('twitter', element['twitter'])
+                            stream_object.set_custom('instagram', element['instagram'])
+                            stream_object.set_custom('website', element['website'])
+                            stream_object.set_custom('member_id', element['member_id'])
+                    supported_streams.append(stream_object)
+        self.__console("Built Stream Objects for Supported Streams")
+        return supported_streams
+
+    def __active_games(self):
+        starter = None
+        def status():
+            self.__cnsltemp("Obtaining Active Games")
+        games = Game.where('status', '=', 1).get().pluck('name').all()
+        for game in games:
+            status()
+            if starter is None:
+                starter = TwitchService.game(game)
+            else:
+                starter.merge(TwitchService.game(game))
+            if starter is None:
+                starter = HitboxService.game(game)
+            else:
+                starter.merge(HitboxService.game(game))
+        self.__console("Obtained Active Games")
+        starter.sort()
+        starter.set_all("type", "other")
+        starter.set_all("youtube", None)
+        starter.set_all("facebook", None)
+        starter.set_all("twitter", None)
+        starter.set_all("instagram", None)
+        starter.set_all("website", None)
+        starter.set_all("member_id", None)
+        return starter
+
+    def __gotosleep(self):
+        for i in range(self.sleep):
+            time.sleep(1)
+            self.__cnsltemp(" "+str(self.sleep-i))
+
+
+
+    def run(self):
+        while True:
+            import settings
+            self.__console("Reconstructing JSON...")
+
+            users = self.__get_supported()
+
+            supported_streams = self.__build_streams(users)
+
+            supported = Service(supported_streams)
+            supported.sort()
+
+            starter = self.__active_games()
+
+            if supported.num_streams() > 0:
+                starter.prepend(supported)
+                starter.cut()
+            else:
+                starter.cut(9)
+
+            if starter.output_to_json(self.__output()):
+                self.__console("Generated JSON. DONE")
+
+            settings.db.disconnect()
+            self.__console("Sleeping For " + str(self.sleep) + " seconds... Night yo.")
+            self.__gotosleep()
+
+app = App()
+app.run()
