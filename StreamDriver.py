@@ -29,9 +29,8 @@ class StreamDriver:
                 except ConnectionError:
                     StreamDriver.iferror(300)
                     continue
-                except simplejson.JSONDecodeError:
-                    StreamDriver.iferror(300)
-                    continue
+                except ValueError:
+                    return []
                 break
             for stream in data[StreamDriver.providers[service].STREAM_KEY]:
                 stream_object = StreamDriver.providers[service](stream)
@@ -58,11 +57,10 @@ class StreamDriver:
             try:
                 data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
             except ConnectionError:
-                StreamDriver.iferror(300)
+                StreamDriver.iferror(100)
                 continue
-            except simplejson.JSONDecodeError:
-                StreamDriver.iferror(300)
-                continue
+            except ValueError:
+                return []
             break
         if stream_key in data:
             for stream in data[stream_key]:
