@@ -1,6 +1,6 @@
 from Streams.TwitchStream import TwitchStream
 from Streams.HitboxStream import HitboxStream
-import abc, requests, urllib.parse, time, simplejson
+import abc, requests, urllib.parse, time, json
 
 
 class StreamDriver:
@@ -25,7 +25,8 @@ class StreamDriver:
             list = ",".join(chunk)
             while True:
                 try:
-                    data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
+                    data = requests.get(StreamDriver.providers[service].STREAM_API+list).content
+                    data = json.loads(data.replace("\r", "\\r").replace('\n', '\\n'))
                 except ConnectionError:
                     StreamDriver.iferror(300)
                     continue
@@ -55,7 +56,8 @@ class StreamDriver:
         stream_key = StreamDriver.providers[service].STREAM_KEY
         while True:
             try:
-                data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
+                data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).content
+                data = json.loads(data.replace("\r", "\\r").replace('\n', '\\n'))
             except ConnectionError:
                 StreamDriver.iferror(100)
                 continue
