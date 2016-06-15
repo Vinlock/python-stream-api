@@ -25,8 +25,7 @@ class StreamDriver:
             list = ",".join(chunk)
             while True:
                 try:
-                    data = requests.get(StreamDriver.providers[service].STREAM_API+list).content
-                    data = json.loads(data.replace("\r", "\\r").replace('\n', '\\n'))
+                    data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
                 except ConnectionError:
                     StreamDriver.iferror(300)
                     continue
@@ -56,8 +55,7 @@ class StreamDriver:
         stream_key = StreamDriver.providers[service].STREAM_KEY
         while True:
             try:
-                data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).content
-                data = json.loads(data.replace("\r", "\\r").replace('\n', '\\n'))
+                data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
             except ConnectionError:
                 StreamDriver.iferror(100)
                 continue
