@@ -197,4 +197,11 @@ class App(object):
             self.__gotosleep()
 
 app = App()
-app.run()
+while True:
+    try:
+        app.run()
+    except KeyboardInterrupt:
+        raise KeyboardInterrupt
+    except:
+        continue
+    
