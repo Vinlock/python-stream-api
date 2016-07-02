@@ -1,5 +1,6 @@
 from orator import Model
 from orator.orm import has_one, belongs_to_many
+import settings
 
 
 class User(Model):

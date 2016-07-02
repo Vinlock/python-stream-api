@@ -172,7 +172,7 @@ class App(object):
 
     def run(self):
         while True:
-            import settings
+            # import settings
             self.__console("Reconstructing JSON...")
 
             users = self.__get_supported()
