@@ -1,9 +1,8 @@
-import argparse
-import itertools
-import time
-
-from Models.Models import *
+from StreamDriver import StreamDriver
 from Services.Service import *
+from Models.Models import *
+import time, sys, itertools
+import argparse
 
 
 class App(object):
@@ -172,7 +171,7 @@ class App(object):
 
     def run(self):
         while True:
-            # import settings
+            import settings
             self.__console("Reconstructing JSON...")
 
             users = self.__get_supported()
