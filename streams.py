@@ -1,8 +1,9 @@
-from StreamDriver import StreamDriver
-from Services.Service import *
-from Models.Models import *
-import time, sys, itertools
 import argparse
+import itertools
+import time
+
+from Models.Models import *
+from Services.Service import *
 
 
 class App(object):

@@ -1,6 +1,7 @@
-from Streams.Stream import Stream
-from StreamDriver import StreamDriver
-import json, io
+import io
+import json
+
+from Streams.StreamDriver import StreamDriver
 
 
 class Service:
