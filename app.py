@@ -174,26 +174,37 @@ class App(object):
             import settings
             self.__console("Reconstructing JSON...")
 
+            # Get all supported users.
             users = self.__get_supported()
 
+            # Build their streams from the Users found.
             supported_streams = self.__build_streams(users)
 
+            # Create Service Objects from the streams found.
             supported = Service(supported_streams)
+            # Sort them by viewers highest to lowest.
             supported.sort()
 
-            starter = self.__active_games()
+            # Find all other streams that are streaming the supported Games.
+            others = self.__active_games()
 
+            # If there are supported streamers online...
             if supported.num_streams() > 0:
-                starter.prepend(supported)
-                starter.cut()
+                # Prepend Supported to Active Game Streamers
+                others.prepend(supported)
+                # Make sure the correct amount of streamers are kept, the others are cut.
+                others.cut()
             else:
-                starter.cut(9)
+                others.cut(9)
 
-            if starter.output_to_json(self.__output()):
+            # Output to JSON.
+            if others.output_to_json(self.__output()):
                 self.__console("Generated JSON. DONE")
 
+            # Disconnect to DB, will reconnect on next run.
             settings.db.disconnect()
             self.__console("Sleeping For " + str(self.sleep) + " seconds... Night yo.")
+            # Sleep
             self.__gotosleep()
 
 app = App()
