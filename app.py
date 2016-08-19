@@ -211,8 +211,8 @@ app = App()
 while True:
     try:
         app.run()
-    except KeyboardInterrupt:
-        raise KeyboardInterrupt
-    except:
-        continue
+    # except KeyboardInterrupt:
+    #     raise KeyboardInterrupt
+    # except:
+    #     continue
     
