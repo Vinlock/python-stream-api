@@ -80,7 +80,7 @@ class App(object):
         elif self.env == "same":
             dest = "streams.json"
         else:
-            dest = "/var/www/vhosts/pvpallday.com/lv-old/public/234c12f14-streams/streams.json"
+            dest = "/var/www/vhosts/pvpallday.com/laravel/public/234c12f14-streams/streams.json"
         return dest
 
     def __get_supported(self):
