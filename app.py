@@ -209,5 +209,9 @@ class App(object):
 
 app = App()
 while True:
-    app.run()
-    
+    try:
+        app.run()
+    except KeyboardInterrupt:
+        raise KeyboardInterrupt
+    except:
+        continue
