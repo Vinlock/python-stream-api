@@ -6,3 +6,5 @@ Credit: Justin, Twitch.tv API, and Hitbox.tv API
 
 ### Usage
 Ignore the `app.py` unless for an example.
+
+**Note:** Twitch has modified their API. Updates coming.
