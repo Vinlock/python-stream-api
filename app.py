@@ -108,7 +108,7 @@ class App(object):
             if username and service:
                 supported_list[service].append(stream_info)
             self.__console("Filled Custom Fields for Users")
-            return supported_list
+        return supported_list
 
     def __build_streams(self, users):
         def status():
