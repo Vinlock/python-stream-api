@@ -1,11 +1,15 @@
 from Streams.Stream import Stream
-import json, requests
+import json, requests, settings
 
 
 class TwitchStream(Stream):
     _service = "twitch"
 
     STREAM_KEY = "streams"
+
+    # headers = {
+    #     'client-id': settings.twitch['clientid']
+    # }
 
     STREAM_API = "https://api.twitch.tv/kraken/streams?channel="
 
@@ -16,6 +20,12 @@ class TwitchStream(Stream):
     STREAM_URL = "http://www.twitch.tv/"
 
     DEFAULT_AVATAR = "http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png"
+
+    @staticmethod
+    def headers():
+        return {
+            'client-id': settings.twitch['clientid']
+        }
 
     def __init__(self, dictionary):
         self._stream_data = dictionary

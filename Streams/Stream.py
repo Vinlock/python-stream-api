@@ -32,6 +32,10 @@ class Stream:
         }
         return result
 
+    @staticmethod
+    def header():
+        return {}
+
     def set_custom(self, key, value):
         self._custom_members[key] = value
 

@@ -28,7 +28,7 @@ class App(object):
         # APP STREAM DRIVER LIMIT
         self.limit = self.__limit()
 
-        # APP ENVIRONEMNT
+        # APP ENVIRONMENT
         self.env = self.args.env
 
     def __sleep(self):
@@ -107,7 +107,7 @@ class App(object):
             }
             if username and service:
                 supported_list[service].append(stream_info)
-            self.__console("Filled Custom Fields for Users")
+        self.__console("Filled Custom Fields for Users")
         return supported_list
 
     def __build_streams(self, users):
@@ -166,8 +166,6 @@ class App(object):
         for i in range(self.sleep):
             time.sleep(1)
             self.__cnsltemp(" "+str(self.sleep-i))
-
-
 
     def run(self):
         while True:

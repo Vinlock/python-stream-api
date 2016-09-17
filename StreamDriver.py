@@ -25,7 +25,14 @@ class StreamDriver:
             list = ",".join(chunk)
             while True:
                 try:
-                    data = requests.get(StreamDriver.providers[service].STREAM_API+list).json()
+                    s = requests.Session()
+                    if (StreamDriver.providers[service].headers()):
+                        data = s.get(url=StreamDriver.providers[service].STREAM_API + list, headers=StreamDriver.providers[service].headers())
+                        # s.headers(StreamDriver.providers[service].headers())
+                    else:
+                        data = s.get(StreamDriver.providers[service].STREAM_API + list)
+                    # data = s.get(StreamDriver.providers[service].STREAM_API + list)
+                    data = data.json()
                 except ConnectionError:
                     StreamDriver.iferror(300)
                     continue

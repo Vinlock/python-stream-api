@@ -30,6 +30,10 @@ stores = {
     }
 }
 
+twitch = {
+    'clientid': config['twitch']['clientid']
+}
+
 cache = Cache(stores)
 
 db = DatabaseManager(db_config, cache=cache)
