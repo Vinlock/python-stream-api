@@ -7,6 +7,8 @@ class Stream:
         "username", "display_name", "preview", "status", "url", "viewers", "id", "avatar"
     ]
 
+    headers = {}
+
     _custom_members = {}
 
     def _stream(self):
@@ -31,10 +33,6 @@ class Stream:
             "updated_at": self.updated_at()
         }
         return result
-
-    @staticmethod
-    def header():
-        return {}
 
     def set_custom(self, key, value):
         self._custom_members[key] = value

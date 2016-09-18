@@ -22,15 +22,16 @@ class StreamDriver:
         chunks = StreamDriver.chunks(usernames, StreamDriver.NUM_PER_MULTI)
 
         for chunk in chunks:
-            list = ",".join(chunk)
+            thelist = ",".join(chunk)
             while True:
                 try:
+                    get_streams_url = StreamDriver.providers[service].STREAM_API + thelist
                     s = requests.Session()
-                    if (StreamDriver.providers[service].headers()):
-                        data = s.get(url=StreamDriver.providers[service].STREAM_API + list, headers=StreamDriver.providers[service].headers())
+                    if StreamDriver.providers[service].headers:
+                        data = s.get(url=get_streams_url, headers=StreamDriver.providers[service].headers)
                         # s.headers(StreamDriver.providers[service].headers())
                     else:
-                        data = s.get(StreamDriver.providers[service].STREAM_API + list)
+                        data = s.get(get_streams_url)
                     # data = s.get(StreamDriver.providers[service].STREAM_API + list)
                     data = data.json()
                 except ConnectionError:
@@ -62,7 +63,16 @@ class StreamDriver:
         stream_key = StreamDriver.providers[service].STREAM_KEY
         while True:
             try:
-                data = requests.get(StreamDriver.providers[service].GAMES_API+game+"&limit="+str(limit)).json()
+                get_streams_url = StreamDriver.providers[service].GAMES_API+game+"&limit"+str(limit)
+                s = requests.Session()
+                if StreamDriver.providers[service].headers:
+                    data = s.get(url=get_streams_url,
+                                 headers=StreamDriver.providers[service].headers)
+                    # s.headers(StreamDriver.providers[service].headers())
+                else:
+                    data = s.get(get_streams_url)
+                # data = s.get(StreamDriver.providers[service].STREAM_API + list)
+                data = data.json()
             except ConnectionError:
                 StreamDriver.iferror(100)
                 continue

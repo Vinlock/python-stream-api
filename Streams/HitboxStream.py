@@ -15,6 +15,8 @@ class HitboxStream(Stream):
 
     STREAM_URL = "http://www.hitbox.tv/"
 
+    headers = {}
+
     def __init__(self, dictionary):
         self._stream_data = dictionary
         self._custom_members = {}

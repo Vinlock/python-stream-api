@@ -7,9 +7,9 @@ class TwitchStream(Stream):
 
     STREAM_KEY = "streams"
 
-    # headers = {
-    #     'client-id': settings.twitch['clientid']
-    # }
+    headers = {
+        'client-id': settings.twitch['clientid']
+    }
 
     STREAM_API = "https://api.twitch.tv/kraken/streams?channel="
 
@@ -20,12 +20,6 @@ class TwitchStream(Stream):
     STREAM_URL = "http://www.twitch.tv/"
 
     DEFAULT_AVATAR = "http://static-cdn.jtvnw.net/jtv_user_pictures/xarth/404_user_150x150.png"
-
-    @staticmethod
-    def headers():
-        return {
-            'client-id': settings.twitch['clientid']
-        }
 
     def __init__(self, dictionary):
         self._stream_data = dictionary
@@ -69,7 +63,8 @@ class TwitchStream(Stream):
             return avatar
 
     def bio(self):
-        response = requests.get(self.USERS_API+self.username()).json()
+        sesh = requests.Session()
+        response = sesh.get(url=self.USERS_API+self.username(), headers=self.headers).json()
         bio = Stream.filter_bio(response['bio'])
         return bio
 
