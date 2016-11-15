@@ -72,6 +72,7 @@ class App(object):
         parser.add_argument('-s', '--sleep', default=180)
         parser.add_argument('-l', '--limit', default=10)
         parser.add_argument('-e', '--env', default="production")
+        parser.add_argument('-d', '--debug', default=False)
         return parser.parse_args()
 
     def __output(self):
@@ -212,5 +213,8 @@ while True:
         app.run()
     except KeyboardInterrupt:
         raise KeyboardInterrupt
-    except:
-        continue
+    except Exception as e:
+        if app.args.debug:
+            raise e
+        else:
+            continue
