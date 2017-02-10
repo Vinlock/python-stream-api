@@ -143,6 +143,8 @@ class App(object):
             self.__cnsltemp("Obtaining Active Games")
         games = Game.where('status', '=', 1).get().pluck('name').all()
         for game in games:
+            if game == "Aion Online":
+                game = "Aion: Ascension"
             status()
             if starter is None:
                 starter = TwitchService.game(game)
