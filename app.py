@@ -142,6 +142,7 @@ class App(object):
         def status():
             self.__cnsltemp("Obtaining Active Games")
         games = Game.where('status', '=', 1).get().pluck('name').all()
+        games.append("Aion")
         for game in games:
             if game == "Aion Online":
                 game = "Aion: Ascension"
